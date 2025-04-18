@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">YndUrfu</string>
+    <string name="unimportant">😴 Неважная</string>
+    <string name="common">🙏🏿 Обычная</string>
+    <string name="important">❗️Сверхважная</string>
+    <string name="add_destroy_date">Добавить дату самоуничтожения</string>
+    <string name="select_date">Выбрать дату</string>
+    <string name="chosen">Выбрано: %1$s</string>
+    <string name="add">Добавить</string>
+    <string name="cancel">Отмена</string>
+    <string name="note_name">Название заметки</string>
+    <string name="note_content">Текст заметки</string>
 </resources>
