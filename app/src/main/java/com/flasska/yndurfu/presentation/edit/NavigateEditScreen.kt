@@ -1,24 +1,25 @@
 package com.flasska.yndurfu.presentation.edit
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object EditScreen
+internal data class EditScreen(val id: String? = null)
 
-fun NavHostController.navigateToEdit() {
-    navigate(EditScreen)
+internal fun NavHostController.navigateToEdit(editScreen: EditScreen) {
+    navigate(editScreen)
 }
 
-fun NavGraphBuilder.editScreen(
+internal fun NavGraphBuilder.editScreen(
     navigateBack: () -> Unit,
 ) {
     composable<EditScreen> {
         EditScreenDrawer(
             navigateBack = navigateBack,
+            editScreen = it.toRoute(),
         )
     }
 }
