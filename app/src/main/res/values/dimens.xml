@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="border_width">1dp</dimen>
+    <dimen name="color_box_size">48dp</dimen>
+    <dimen name="color_box_paddings">4dp</dimen>
+    <dimen name="color_box_check_icon_size">32dp</dimen>
+    <dimen name="date_picker_arrangement">8dp</dimen>
+    <dimen name="important_picker_arrangement">4dp</dimen>
+    <dimen name="important_picker_paddings">8dp</dimen>
+    <dimen name="important_round">16dp</dimen>
+    <dimen name="edit_screen_arrangement">12dp</dimen>
+    <dimen name="edit_screen_padding_top">32dp</dimen>
+    <dimen name="edit_screen_padding_start">16dp</dimen>
+    <dimen name="edit_screen_padding_end">16dp</dimen>
+
+
+</resources>
