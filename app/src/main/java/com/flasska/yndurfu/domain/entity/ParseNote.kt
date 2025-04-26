@@ -8,25 +8,22 @@ import java.util.UUID
 private val dtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 fun JSONObject.parseToNote(): Note? {
-    if (
-        isNull(ParseData.Title.name)
-        || isNull(ParseData.Content.name)
-        || isNull(ParseData.Uid.name)
-        || isNull(ParseData.DateTime.name)
-        || isNull(ParseData.Color.name)
-        || isNull(ParseData.Important.name)
-    ) {
+    if (ParseData.anyIsNullInJson(this)) {
         return null
     }
 
-    return Note(
-        title = getString(ParseData.Title.name),
-        content = getString(ParseData.Content.name),
-        color = getInt(ParseData.Color.name),
-        uid = UUID.fromString(getString(ParseData.Uid.name)),
-        important = Important.valueOf(getString(ParseData.Important.name)),
-        deleteDateTime = LocalDateTime.parse(getString(ParseData.DateTime.name), dtFormatter)
-    )
+    return try {
+        Note(
+            title = getString(ParseData.Title.name),
+            content = getString(ParseData.Content.name),
+            color = getInt(ParseData.Color.name),
+            uid = UUID.fromString(getString(ParseData.Uid.name)),
+            important = Important.valueOf(getString(ParseData.Important.name)),
+            deleteDateTime = LocalDateTime.parse(getString(ParseData.DateTime.name), dtFormatter)
+        )
+    } catch (e: Exception) {
+        null
+    }
 }
 
 fun Note.parseToJson() = JSONObject().apply {
@@ -44,5 +41,10 @@ private enum class ParseData {
     Title,
     Content,
     Uid,
-    DateTime
+    DateTime;
+
+    companion object {
+        fun anyIsNullInJson(json: JSONObject) = entries.map { it.name }.any(json::isNull)
+    }
 }
+
