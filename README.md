@@ -1,1 +1,2 @@
-![img_2.png](img_2.png)
+Видео работы
+https://disk.yandex.ru/i/dvQryKGMYDYl4g
