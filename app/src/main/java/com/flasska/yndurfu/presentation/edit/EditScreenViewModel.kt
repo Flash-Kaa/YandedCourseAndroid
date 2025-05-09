@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.flasska.yndurfu.domain.entity.Important
 import com.flasska.yndurfu.domain.entity.Note
 import com.flasska.yndurfu.domain.interfaces.NotebookManager
@@ -19,13 +20,14 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 internal class EditScreenViewModel(
+    private val id: String?,
     private val notebookManager: NotebookManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EditScreenState())
     val state = _state.asStateFlow()
 
-    fun loadFromId(id: String?) {
+    init {
         viewModelScope.launch(Dispatchers.Default) {
             val state = id?.let {
                 notebookManager.getByIdOrNull(id)?.let { note ->
@@ -126,10 +128,16 @@ internal class EditScreenViewModel(
         private val notebookManager: NotebookManager,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+            val id = extras.get(ID_KEY)
             return EditScreenViewModel(
+                id = id,
                 notebookManager = notebookManager,
             ) as T
+        }
+
+        companion object {
+            val ID_KEY = object : CreationExtras.Key<String?> {}
         }
     }
 }
