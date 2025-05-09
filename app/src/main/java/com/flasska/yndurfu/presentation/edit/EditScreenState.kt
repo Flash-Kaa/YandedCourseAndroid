@@ -5,6 +5,7 @@ import com.flasska.yndurfu.domain.entity.Important
 import java.time.LocalDateTime
 
 internal data class EditScreenState(
+    val id: String? = null,
     val title: String = "",
     val text: String = "",
     val addDeleteDate: Boolean = false,

@@ -8,8 +8,8 @@ data class Note(
     val content: String,
     val color: Int,
     val important: Important,
-    val deleteDateTime: LocalDateTime,
-    val uid: UUID = UUID.randomUUID(),
+    val deleteDateTime: LocalDateTime?,
+    val uid: String = UUID.randomUUID().toString(),
 ) {
     override fun equals(other: Any?): Boolean {
         return (other as? Note)?.let { it.uid == uid } ?: false

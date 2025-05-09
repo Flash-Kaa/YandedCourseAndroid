@@ -1,7 +1,9 @@
 package com.flasska.yndurfu.di
 
-import com.flasska.yndurfu.domain.interfaces.FileNotebookRepository
+import com.flasska.yndurfu.domain.interfaces.NotebookManager
+import com.flasska.yndurfu.presentation.NotebookLoaderViewModel
 import com.flasska.yndurfu.presentation.edit.EditScreenViewModel
+import com.flasska.yndurfu.presentation.list.ListScreenViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,8 +13,24 @@ internal class VmFactoryModule {
     @Singleton
     @Provides
     fun provideEditViewModel(
-        fileNotebookRepository: FileNotebookRepository,
+        notebookManager: NotebookManager,
     ) = EditScreenViewModel.Factory(
-        fileNotebookRepository = fileNotebookRepository,
+        notebookManager = notebookManager,
+    )
+
+    @Singleton
+    @Provides
+    fun provideListViewModel(
+        notebookManager: NotebookManager,
+    ) = ListScreenViewModel.Factory(
+        notebookManager = notebookManager,
+    )
+
+    @Provides
+    @Singleton
+    fun provideNotebookLoaderViewModel(
+        notebookManager: NotebookManager,
+    ) = NotebookLoaderViewModel.Factory(
+        notebookManager = notebookManager,
     )
 }

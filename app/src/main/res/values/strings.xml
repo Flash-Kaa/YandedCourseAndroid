@@ -10,4 +10,6 @@
     <string name="cancel">Отмена</string>
     <string name="note_name">Название заметки</string>
     <string name="note_content">Текст заметки</string>
+    <string name="delete">УДАЛИТЬ</string>
+    <string name="delete_date">Дата удаления: %1$s</string>
 </resources>
