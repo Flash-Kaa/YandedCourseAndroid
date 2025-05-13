@@ -6,18 +6,16 @@ import com.flasska.yndurfu.domain.entity.parseToJson
 import com.flasska.yndurfu.domain.entity.parseToNote
 import com.flasska.yndurfu.domain.interfaces.FileNotebookRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import org.json.JSONObject
 import java.time.LocalDateTime
-import java.util.UUID
 
 class FileNotebookRepositoryImpl(
     context: Context,
 ) : FileNotebookRepository {
     private var _notesFlow = MutableStateFlow(emptySet<Note>())
-    override val notesFlow = _notesFlow.asStateFlow().map { it.toList() }
+    override val notesFlow = _notesFlow.map { it.toList() }
 
     private val sp = context.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE)
 
@@ -45,6 +43,10 @@ class FileNotebookRepositoryImpl(
             ?.mapNotNull { JSONObject(it).parseToNote() }
             ?.filter { it.deleteDateTime?.let { it >= now } != false }
             ?.let { notes -> _notesFlow.update{ notes.toSet() } }
+    }
+
+    override fun sendNotes(notes: List<Note>) {
+        _notesFlow.update { notes.toSet() }
     }
 
     companion object {
