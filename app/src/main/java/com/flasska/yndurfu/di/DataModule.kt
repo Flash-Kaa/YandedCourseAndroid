@@ -3,8 +3,10 @@ package com.flasska.yndurfu.di
 import android.content.Context
 import com.flasska.yndurfu.data.FileNotebookRepositoryImpl
 import com.flasska.yndurfu.data.NotebookManagerImpl
+import com.flasska.yndurfu.data.NotebookNetworkManagerImpl
 import com.flasska.yndurfu.domain.interfaces.FileNotebookRepository
 import com.flasska.yndurfu.domain.interfaces.NotebookManager
+import com.flasska.yndurfu.domain.interfaces.NotebookNetworkManager
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
@@ -23,13 +25,21 @@ class DataModule {
     @Provides
     fun provideNotebookManager(
         notebookRepository: FileNotebookRepository,
+        notebookNetworkManager: NotebookNetworkManager,
         coroutineScope: CoroutineScope,
     ): NotebookManager = NotebookManagerImpl(
-        notebookRepository = notebookRepository,
+        fileNotebookRepository = notebookRepository,
         coroutineScope = coroutineScope,
+        notebookNetworkManager = notebookNetworkManager,
     )
 
     @Singleton
     @Provides
     fun provideCoroutineScope(): CoroutineScope = CoroutineScope(Dispatchers.Default)
+
+    @Singleton
+    @Provides
+    fun provideNotebookNetworkManager(
+    ): NotebookNetworkManager = NotebookNetworkManagerImpl(
+    )
 }

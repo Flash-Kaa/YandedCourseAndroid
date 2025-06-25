@@ -1,11 +1,10 @@
 package com.flasska.yndurfu.presentation.edit
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.flasska.yndurfu.appComponent
 
@@ -15,13 +14,12 @@ internal fun EditScreenDrawer(
     editScreen: EditScreen,
 ) {
     val context = LocalContext.current
-    val vm =  viewModel<EditScreenViewModel>(
-        factory = context.appComponent.provideEditViewModelFactory()
+    val vm = viewModel<EditScreenViewModel>(
+        factory = context.appComponent.provideEditViewModelFactory(),
+        extras = MutableCreationExtras().apply {
+            set(EditScreenViewModel.Factory.ID_KEY, editScreen.id)
+        }
     )
-
-    LaunchedEffect(Unit) {
-        vm.loadFromId(editScreen.id)
-    }
 
     val state by vm.state.collectAsStateWithLifecycle()
     EditScreen(

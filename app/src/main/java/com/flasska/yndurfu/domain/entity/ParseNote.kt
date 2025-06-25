@@ -24,7 +24,8 @@ fun JSONObject.parseToNote(): Note? {
             color = getInt(ParseData.Color.name),
             uid = getString(ParseData.Uid.name),
             important = Important.valueOf(getString(ParseData.Important.name)),
-            deleteDateTime = LocalDateTime.parse(getString(ParseData.DateTime.name), dtFormatter)
+            deleteDateTime = if (isNull(ParseData.DateTime.name)) null
+                else LocalDateTime.parse(getString(ParseData.DateTime.name), dtFormatter)
         )
     } catch (e: Exception) {
         null
@@ -37,7 +38,9 @@ fun Note.parseToJson() = JSONObject().apply {
     put(ParseData.Title.name, title)
     put(ParseData.Content.name, content)
     put(ParseData.Uid.name, uid)
-    put(ParseData.DateTime.name, dtFormatter.format(deleteDateTime))
+    deleteDateTime?.let {
+        put(ParseData.DateTime.name, dtFormatter.format(deleteDateTime))
+    }
 }
 
 private enum class ParseData {

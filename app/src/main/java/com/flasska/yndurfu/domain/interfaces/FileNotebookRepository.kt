@@ -10,4 +10,5 @@ interface FileNotebookRepository {
     fun delete(uid: String)
     fun save()
     fun load()
+    fun sendNotes(notes: List<Note>)
 }
