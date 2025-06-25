@@ -11,5 +11,5 @@ internal interface EditScreenEvent {
     data class UpdateColor(val value: Color) : EditScreenEvent
 
     data object UpdateAddingDeleteDate : EditScreenEvent
-    data object Save : EditScreenEvent
+    data object SaveEdit : EditScreenEvent
 }

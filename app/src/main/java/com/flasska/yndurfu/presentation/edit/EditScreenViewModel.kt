@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.flasska.yndurfu.domain.entity.Important
 import com.flasska.yndurfu.domain.entity.Note
-import com.flasska.yndurfu.domain.interfaces.FileNotebookRepository
+import com.flasska.yndurfu.domain.interfaces.NotebookManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,13 +16,34 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 internal class EditScreenViewModel(
-    private val fileNotebookRepository: FileNotebookRepository,
+    private val notebookManager: NotebookManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EditScreenState())
     val state = _state.asStateFlow()
+
+    fun loadFromId(id: String?) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val state = id?.let {
+                notebookManager.getByIdOrNull(id)?.let { note ->
+                    EditScreenState(
+                        id = note.uid,
+                        title = note.title,
+                        text = note.content,
+                        addDeleteDate = note.deleteDateTime != null,
+                        deleteDate = note.deleteDateTime ?: LocalDateTime.now(),
+                        color = Color(note.color),
+                        important = note.important,
+                    )
+                }
+            } ?: EditScreenState()
+
+            _state.update { state }
+        }
+    }
 
     fun processEvent(event: EditScreenEvent) {
         when (event) {
@@ -32,7 +53,7 @@ internal class EditScreenViewModel(
             is EditScreenEvent.UpdateImportant -> updateImportant(event.value)
             is EditScreenEvent.UpdateColor -> updateColor(event.value)
             EditScreenEvent.UpdateAddingDeleteDate -> updateAddingDeleteDate()
-            EditScreenEvent.Save -> save()
+            EditScreenEvent.SaveEdit -> saveEdit()
         }
     }
 
@@ -86,27 +107,28 @@ internal class EditScreenViewModel(
         }
     }
 
-    private fun save() = with (state.value) {
+    private fun saveEdit() = with (state.value) {
         viewModelScope.launch(Dispatchers.Default) {
-            fileNotebookRepository.add(
+            notebookManager.add(
                 Note(
+                    uid = id ?: UUID.randomUUID().toString(),
                     title = title,
                     content = text,
                     color = color.toArgb(),
                     important = important,
-                    deleteDateTime = deleteDate,
+                    deleteDateTime = if (addDeleteDate) deleteDate else null,
                 )
             )
         }
     }
 
     class Factory(
-        private val fileNotebookRepository: FileNotebookRepository,
+        private val notebookManager: NotebookManager,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return EditScreenViewModel(
-                fileNotebookRepository = fileNotebookRepository,
+                notebookManager = notebookManager,
             ) as T
         }
     }
